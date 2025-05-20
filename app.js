@@ -1,12 +1,18 @@
 const express = require('express');
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 app.use(express.json());
+
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.json({
+    app: process.env.APP_NAME ?? 'Unknow'
+  });
 });
+
 app.use('/auth', authRoutes);
 
 // Sincroniza y levanta el servidor
