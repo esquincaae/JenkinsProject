@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REMOTE_PATH = "/home/ubuntu/auth-service"
+        REMOTE_PATH = "/home/ubuntu/user-service"
     }
 
     stages {
@@ -64,18 +64,18 @@ ssh -i "$SSH_KEY_FILE" -o StrictHostKeyChecking=no "$EC2_USER"@"${params.EC2_HOS
     cd ${REMOTE_PATH}
 
     # Reconstruir imagen
-    sudo docker build --build-arg APP_NAME="${params.APP_NAME}" --build-arg JWT_SECRET="${params.JWT_SECRET}" --build-arg DB_NAME="${params.DB_NAME}" --build-arg DB_USER="${params.DB_USER}" --build-arg DB_PASSWORD="${params.DB_PASSWORD}" --build-arg DB_HOST="${params.DB_HOST}" --build-arg DB_DIALECT="${params.DB_DIALECT}" --build-arg DB_PORT="${params.DB_PORT}" -t auth-service .
+    sudo docker build --build-arg APP_NAME="${params.APP_NAME}" --build-arg JWT_SECRET="${params.JWT_SECRET}" --build-arg DB_NAME="${params.DB_NAME}" --build-arg DB_USER="${params.DB_USER}" --build-arg DB_PASSWORD="${params.DB_PASSWORD}" --build-arg DB_HOST="${params.DB_HOST}" --build-arg DB_DIALECT="${params.DB_DIALECT}" --build-arg DB_PORT="${params.DB_PORT}" -t user-service .
 
     # Parar y eliminar contenedor si existe
-    if sudo docker ps -a --format '{{.Names}}' | grep -q '^auth-service\$'; then
-        sudo docker stop auth-service || true
-        sudo docker rm auth-service || true
+    if sudo docker ps -a --format '{{.Names}}' | grep -q '^user-service\$'; then
+        sudo docker stop user-service || true
+        sudo docker rm user-service || true
     fi
 
     # Iniciar nuevo contenedor
-    sudo docker run -d --name auth-service -p 80:80 auth-service
+    sudo docker run -d --name user-service -p 8080:3000 user-service
 
-    sudo docker ps --filter "name=auth-service"
+    sudo docker ps --filter "name=user-service"
 EOF
                     """
                 }
