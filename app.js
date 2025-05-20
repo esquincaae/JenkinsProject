@@ -4,7 +4,9 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 app.use(express.json());
-
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 app.use('/auth', authRoutes);
 
 // Sincroniza y levanta el servidor
